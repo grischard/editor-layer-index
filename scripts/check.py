@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json, sys, io
 from jsonschema import validate, ValidationError
 
