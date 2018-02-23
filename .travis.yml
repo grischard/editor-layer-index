@@ -2,12 +2,13 @@ language: python
 
 install: pip install -r requirements.txt
 
-script: scripts/travis-build.sh
+script: make check
 branches:
   only:
   - gh-pages
   - /.*/
-
+before_deploy:
+  make
 deploy:
   provider: pages
   skip-cleanup: true
@@ -15,5 +16,9 @@ deploy:
   name: Robot Fairhurst
   keep-history: true
   on:
+    # Only deploy from gh-pages branch
     branch: gh-pages
-    condition: -n "`./scripts/check_deploy.sh`"
+    # Check if the imagery files needs to be deployed
+    # If there are no changes to the compiled out except the generated date (e.g. this is a README update) then just bail.
+    condition: >
+        -n `diff <(git show HEAD:./imagery.geojson | sed -e "s/\"generated\":\"[-: 0-9]*\"//") <(sed -e "s/\"generated\":\"[-: 0-9]*\"//" imagery.geojson)`
