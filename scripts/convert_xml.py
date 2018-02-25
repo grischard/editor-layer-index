@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json, sys, string, util, io
 import xml.etree.cElementTree as ET
 

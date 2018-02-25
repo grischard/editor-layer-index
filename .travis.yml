@@ -1,7 +1,25 @@
 language: python
-install: pip install jsonschema
+
+install: pip install -r requirements.txt
+
 script: make check
 branches:
   only:
     - gh-pages
-    - /^.*$/
+    - /.*/
+before_deploy:
+  # if we're going to deploy, compile
+  make
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  name: Robot Fairhurst
+  keep-history: true
+  on:
+    # Only deploy from gh-pages branch itself
+    branch: gh-pages
+    # Check if the imagery files needs to be deployed
+    # If there are no changes to the compiled out except the generated date (e.g. this is a README update) then just bail.
+    condition: >
+        -n `diff <(git show HEAD:./imagery.geojson | sed -e "s/\"generated\":\"[-: 0-9]*\"//") <(sed -e "s/\"generated\":\"[-: 0-9]*\"//" imagery.geojson)`
