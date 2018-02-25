@@ -5,9 +5,10 @@ install: pip install -r requirements.txt
 script: make check
 branches:
   only:
-  - gh-pages
-  - /.*/
+    - gh-pages
+    - /.*/
 before_deploy:
+  # if we're going to deploy, compile
   make
 deploy:
   provider: pages
@@ -16,7 +17,7 @@ deploy:
   name: Robot Fairhurst
   keep-history: true
   on:
-    # Only deploy from gh-pages branch
+    # Only deploy from gh-pages branch itself
     branch: gh-pages
     # Check if the imagery files needs to be deployed
     # If there are no changes to the compiled out except the generated date (e.g. this is a README update) then just bail.
